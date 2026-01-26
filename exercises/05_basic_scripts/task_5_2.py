@@ -25,3 +25,5 @@ You can then take 8 bits of the binary mask using slices and convert them to dec
 
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 """
+
+cidr_net: str | None 

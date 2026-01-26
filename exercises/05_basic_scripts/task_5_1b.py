@@ -52,8 +52,8 @@ london_co = {
 }
 
 device: str | None = str(input("Enter device name: "))
-param: str | None = str(input("Enter parameter name: "))
 device_record: str | None = london_co.get(device, None)
+param: str | None = str(input(f"Enter parameter name {tuple(device_record.keys())}: "))
 
 if device_record: print(device_record.get(param, None))
 else: print(device_record)

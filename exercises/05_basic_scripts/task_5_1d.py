@@ -43,3 +43,11 @@ london_co = {
         "routing": True,
     },
 }
+
+device: str | None = str(input("Enter device name: "))
+device_record: str | None = london_co.get(device, None)
+if device_record: 
+    param: str | None = str(input(f"Enter parameter name {tuple(device_record.keys())}: ")).lower()
+    print(device_record.get(param, "There is no such parameter"))
+else:
+    print("There is no such device")
