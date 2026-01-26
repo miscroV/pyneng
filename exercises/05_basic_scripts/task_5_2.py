@@ -26,5 +26,25 @@ You can then take 8 bits of the binary mask using slices and convert them to dec
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 """
 
-ip_net: str | None; ip_mask: str | None = input("Input network in CIDR format: ").split("/")
+ip_net, ip_mask = input("Input network in CIDR format: ").split("/")
+ip_mask = int(ip_mask)
+
+# Input verification would go here.
+
+ip_list = [c for c in ip_net.split(".")]
+ip_mask_list = [str(int(c, 2)) for c in bin_ip_mask_list]
+
+bin_ip_mask_list = [ ("1" * ip_mask + "0" * (32 - ip_mask))[c:c+8] for c in range(0,32,8) ]
+bin_ip_list = [bin(int(c))[2:] for c in ip_list]
+
+print("\n".join([
+    "Network: ",
+    f"{ip_list[0]:8}  {ip_list[1]:8}  {ip_list[2]:8}  {ip_list[3]:8}",
+    f"{bin_ip_list[0]:0>8}  {bin_ip_list[1]:0>8}  {bin_ip_list[2]:0>8}  {bin_ip_list[3]:0>8}",
+    "",
+    "Mask: ",
+    f"/{ip_mask}",
+    f"{ip_mask_list[0]:8}  {ip_mask_list[1]:8}  {ip_mask_list[2]:8}  {ip_mask_list[3]:8}",
+    f"{bin_ip_mask_list[0]:0>8}  {bin_ip_mask_list[1]:0>8}  {bin_ip_mask_list[2]:0>8}  {bin_ip_mask_list[3]:0>8}",
+    ]))
 
