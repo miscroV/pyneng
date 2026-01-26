@@ -18,3 +18,13 @@ this stage it is difficult otherwise test the result.
 """
 
 ospf_route = "      10.0.24.0/24 [110/41] via 10.0.13.3, 3d18h, FastEthernet0/0"
+
+prefix, metric, _ ,next_hop, last_update, outboundInf = ospf_route.split() # collect items
+metric, next_hop, last_update = metric[1:-1], next_hop[:-1], last_update[:-1] # clean formatting of select items
+print(
+f"""{'Prefix':22}{prefix}
+{'AD/Metric':22}{metric}
+{'Next-Hop':22}{next_hop}
+{'Last update':22}{last_update}
+{'Outbound Interface':22}{outboundInf}"""
+)

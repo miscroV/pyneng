@@ -26,3 +26,8 @@ this stage it is difficult otherwise test the result.
 """
 
 ip = "192.168.3.1"
+ip_list = [c for c in ip.split(".")]
+bin_ip_list = [bin(int(c))[2:] for c in ip_list]
+
+print(f"{ip_list[0]:8}  {ip_list[1]:8}  {ip_list[2]:8}  {ip_list[3]:8}")
+print(f"{bin_ip_list[0]:0>8}  {bin_ip_list[1]:0>8}  {bin_ip_list[2]:0>8}  {bin_ip_list[3]:0>8}")

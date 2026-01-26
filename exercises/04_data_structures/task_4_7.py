@@ -16,3 +16,6 @@ this stage it is difficult otherwise test the result.
 """
 
 mac = "AAAA:BBBB:CCCC"
+
+mac = ''.join([bin(int(c,16))[2:] for c in mac.replace(":","")])
+print(mac)
