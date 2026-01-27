@@ -50,3 +50,10 @@ london_co = {
         "routing": True,
     },
 }
+
+device: str | None = str(input("Enter device name: "))
+device_record: str | None = london_co.get(device, None)
+param: str | None = str(input(f"Enter parameter name {tuple(device_record.keys())}: "))
+
+if device_record: print(device_record.get(param, None))
+else: print(device_record)

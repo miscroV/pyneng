@@ -44,3 +44,6 @@ london_co = {
         "routing": True,
     },
 }
+
+device = str(input("Enter device name: "))
+print(london_co.get(device, "Device Doesn't Exist"))

@@ -41,3 +41,27 @@ Then the network address will be the first 28 characters from bin_ip + 0000
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 
 """
+ip_net, ip_mask = input("Input network in CIDR format: ").split("/")
+ip_mask = int(ip_mask)
+
+# Input verification would go here.
+ 
+ip_list          = [c for c in ip_net.split(".")]
+bin_ip_list      = [bin(int(c))[2:] for c in ip_list]
+
+bin_ip_mask_list = [("1" * ip_mask + "0" * (32 - ip_mask))[c:c+8] for c in range(0,32,8) ]
+ip_mask_list     = [str(int(c, 2)) for c in bin_ip_mask_list]
+1
+net_ip_list      = [ int(ip, 2) & int(mask, 2) for ip, mask in zip(bin_ip_list, bin_ip_mask_list)]
+bin_net_ip_list      = [bin(int(c))[2:] for c in net_ip_list]
+
+print("\n".join([
+    "Network: ",
+    f"{net_ip_list[0]:8}  {net_ip_list[1]:8}  {net_ip_list[2]:8}  {net_ip_list[3]:8}",
+    f"{bin_net_ip_list[0]:0>8}  {bin_net_ip_list[1]:0>8}  {bin_net_ip_list[2]:0>8}  {bin_net_ip_list[3]:0>8}",
+    "",
+    "Mask: ",
+    f"/{ip_mask}",
+    f"{ip_mask_list[0]:8}  {ip_mask_list[1]:8}  {ip_mask_list[2]:8}  {ip_mask_list[3]:8}",
+    f"{bin_ip_mask_list[0]:0>8}  {bin_ip_mask_list[1]:0>8}  {bin_ip_mask_list[2]:0>8}  {bin_ip_mask_list[3]:0>8}",
+    ]))
