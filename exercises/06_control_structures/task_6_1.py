@@ -13,3 +13,6 @@ Restriction: All tasks must be done using the topics covered in this and previou
 """
 
 mac = ["aabb:cc80:7000", "aabb:dd80:7340", "aabb:ee80:7000", "aabb:ff80:7000"]
+
+result = [c.replace(":",".") for c in mac]
+print(result)
