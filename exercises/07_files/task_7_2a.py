@@ -16,4 +16,13 @@ Restriction: All tasks must be done using the topics covered in this and previou
 
 """
 
+from sys import argv
+
 ignore = ["duplex", "alias", "configuration"]
+config_file = argv[1]
+
+with open(config_file, 'r') as f:
+    for line in f:
+        if line[0] == "!": continue
+        if any([i in line for i in ignore]): continue
+        print(line, end="")

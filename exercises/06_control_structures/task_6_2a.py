@@ -17,3 +17,21 @@ even if several points above are not met.
 
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 """
+try:
+    ip_list = list(map(int, input("ip: ").split(".")))
+    if ((len(ip_list) != 4) or not all([0 <= o <= 255 for o in ip_list])):
+        raise ValueError("Invalid IP address")
+except ValueError:
+    print("Invalid IP Address")
+else:
+    if 1 <= ip_list[0] <= 223:
+        ip_type = "unicast"
+    elif 222 <= ip_list[0] <= 239:
+        ip_type = "multicast"
+    elif all([x == 255 for x in ip_list]):
+        ip_type = "local broadcast"
+    elif all([x == 0 for x in ip_list]):
+        ip_type = "unassigned"
+    else:
+        ip_type = "unused"
+    print(ip_type)

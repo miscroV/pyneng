@@ -40,3 +40,19 @@ if you sort list of lists above.
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 
 """
+import re
+cam_file = "CAM_table.txt"
+mac_re = r"([0-9a-fA-F]{4}[.]){2}[0-9a-fA-F]{4}"
+with open(cam_file, 'r') as f:
+    mac_list = []
+    for line in f:
+        if not re.search(mac_re, line):
+            continue;
+        vlan,mac,_,port = line.split()
+        mac_list.append((vlan,mac,port))
+
+vlan_sorted = sorted(mac_list, key=lambda mac: (int(mac[0]), mac[1]))
+for vlan,mac,port in vlan_sorted:
+    print(f"{vlan.ljust(9)}{mac.ljust(20)}{port.ljust(6)}")
+
+        

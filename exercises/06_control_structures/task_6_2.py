@@ -12,3 +12,16 @@ Depending on the type of address (described below), print to the stdout:
 
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 """
+
+ip_list = list(map(int, input("ip: ").split(".")))
+if 1 <= ip_list[0] <= 223:
+    ip_type = "unicast"
+elif 222 <= ip_list[0] <= 239:
+    ip_type = "multicast"
+elif all([x == 255 for x in ip_list]):
+    ip_type = "local broadcast"
+elif all([x == 0 for x in ip_list]):
+    ip_type = "unassigned"
+else:
+    ip_type = "unused"
+print(ip_type)
