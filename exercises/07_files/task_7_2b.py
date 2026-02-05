@@ -16,5 +16,13 @@ that start with ! must be filtered.
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 
 """
-
+from sys import argv
 ignore = ["duplex", "alias", "configuration"]
+source_config_file = argv[1]
+dest_config_file = argv[2]
+
+with open(source_config_file, 'r') as rf, open(dest_config_file,'w') as wf:
+    for line in rf:
+        if line[0] == "!": continue
+        if any([i in line for i in ignore]): continue
+        wf.write(line)

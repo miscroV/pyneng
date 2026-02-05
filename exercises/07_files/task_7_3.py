@@ -20,3 +20,13 @@ the following table was printed on the stdout:
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 
 """
+
+import re
+cam_file = "CAM_table.txt"
+mac_re = r"([0-9a-fA-F]{4}[.]){2}[0-9a-fA-F]{4}"
+with open(cam_file, 'r') as f:
+    for line in f:
+        if not re.search(mac_re, line):
+            continue;
+        vlan,mac,_,port = line.split()
+        print(f"{vlan.ljust(9)}{mac.ljust(20)}{port.ljust(6)}")
