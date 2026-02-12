@@ -95,4 +95,5 @@ def unique_network_map(topology_dict: dict):
     #print(len(topology_dict), len(uniq_network))
     return uniq_network
 
-dng.draw_topology(unique_network_map(create_network_map(infiles)))
+if __name__ == '__main__':
+    dng.draw_topology(unique_network_map(create_network_map(infiles)))
