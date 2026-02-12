@@ -18,3 +18,19 @@ but it is the code that needs to be checked for the job. This is to simplify tes
 
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 """
+import subprocess
+def ping_ip_addresses(ips: list) -> tuple[list]:
+    """Only usable on linux"""
+    reachable_ips = []
+    unreachable_ips = []
+    for ip in ips:
+        ping_proccess = subprocess.run(['ping', '-c', '1', '-n', ip], stdout=subprocess.DEVNULL)
+        if ping_proccess.returncode == 0:
+            reachable_ips.append(ip)
+        else:
+            unreachable_ips.append(ip)
+
+    return (reachable_ips, unreachable_ips)
+
+if __name__ == '__main__':
+    print(ping_ip_addresses(["1.1.1", "8.8.8.8", "8.8.4.4", "8.8.7.1"]))
