@@ -81,3 +81,18 @@ infiles = [
     "sh_cdp_n_r2.txt",
     "sh_cdp_n_r3.txt",
 ]
+
+from task_11_2 import create_network_map
+import draw_network_graph as dng
+
+def unique_network_map(topology_dict: dict):
+    uniq_network = {}
+    for l_host, r_host  in topology_dict.items():
+        if (uniq_network.get(l_host) == r_host or uniq_network.get(r_host) == l_host):
+            continue
+
+        uniq_network.update({l_host:r_host})
+    #print(len(topology_dict), len(uniq_network))
+    return uniq_network
+
+dng.draw_topology(unique_network_map(create_network_map(infiles)))

@@ -44,8 +44,28 @@ def parse_cdp_neighbors(command_output):
     both with files and with output from equipment.
     Plus, we learn to work with such a output.
     """
+    lines = command_output.split("\n")
+    ignore = ["Capability Codes", "Switch", "Local Intrfce"]
+    cdp_dict = {}
+    for line in lines:
+        if (not line or
+            line.isspace() or 
+            any([word in line for word in ignore])
+            ):
+            continue
 
+        if ">" in line:
+            l_host, *_ = line.split(">")
+            continue
+
+        entry = line.split()
+        r_host, l_intf, r_intf = entry[0], "".join(entry[1:3]), "".join(entry[-2:])
+        cdp_dict[(l_host, l_intf)] = (r_host, r_intf)
+        
+    return(cdp_dict)
 
 if __name__ == "__main__":
-    with open("sh_cdp_n_sw1.txt") as f:
-        print(parse_cdp_neighbors(f.read()))
+    for file in ['./sh_cdp_n_r1.txt','./sh_cdp_n_r2.txt',
+                 './sh_cdp_n_r3.txt','./sh_cdp_n_sw1.txt']:
+        with open(file) as f:
+            print(parse_cdp_neighbors(f.read()))

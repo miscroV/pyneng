@@ -33,3 +33,17 @@ infiles = [
     "sh_cdp_n_r2.txt",
     "sh_cdp_n_r3.txt",
 ]
+
+from task_11_1 import parse_cdp_neighbors
+import draw_network_graph as dng
+
+def create_network_map(filenames: list) -> None:
+    network_connection_dict = {}
+    for file in infiles:
+        with open(file) as file:
+            single_cdp = parse_cdp_neighbors(file.read())
+        network_connection_dict.update(single_cdp)
+    return(network_connection_dict)
+    
+if __name__ == '__main__':
+    dng.draw_topology(create_network_map(infiles))
