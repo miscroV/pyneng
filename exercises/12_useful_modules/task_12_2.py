@@ -33,3 +33,24 @@ The function should return a list like this:
  '172.21.41.129', '172.21.41.130', '172.21.41.131', '172.21.41.132']
 
 """
+import ipaddress as ip
+def convert_ranges_to_ip_list(ip_range_list: list) -> list:
+    ip_list: list = []
+    for ip_range in ip_range_list:
+        if "-" not in ip_range:
+            ip_list.append(ip_range)
+            continue
+
+        start, stop = ip_range.strip().split("-")
+        if stop.isdigit(): stop = ".".join(str(start).split(".")[:3]) + "." + str(stop)
+        start, stop = ip.IPv4Address(start), ip.IPv4Address(stop)
+
+        while start <= stop:
+            ip_list.append(str(start))
+            start += 1
+        
+    return ip_list
+
+if __name__ == '__main__':         
+
+    print(convert_ranges_to_ip_list(["10.1.1.1", "10.4.10.10-13", "192.168.1.12-192.168.1.15"]))
