@@ -31,15 +31,23 @@ def get_int_vlan_map(config_filename):
     with open(config_filename, 'r') as file:
         for line in file:
 
+            # get the interface
             if "interface" in line: 
                 intf = line.split()[1]
                 continue
             
-            if "access" in line:
+            # get access and set default vlan before next line.
+            if "access" in line and "vlan" not in line:
                 is_access = True
-                
+                vlans = [1]
+                continue
+
+            # if alternate vlans found set the vlans,
             if "vlan" in line:
                 vlans = list(map(int,line.split()[-1].split(",")))
+                
+            # if vlans is set, continue the loop, otherwise continue until vlans are found. 
+            elif vlans: pass
             else: continue
 
             if is_access:
