@@ -24,3 +24,33 @@ Check the operation of the function using the config_sw1.txt file.
 
 Restriction: All tasks must be done using the topics covered in this and previous chapters.
 """
+
+def get_int_vlan_map(config_filename):
+    access_intfs = {}
+    trunk_intfs  = {}
+
+    intf, vlans, is_access = None, None, None
+    with open(config_filename, 'r') as file:
+        for line in file:
+
+            if "interface" in line: 
+                intf = line.split()[1]
+                continue
+            
+            if "access" in line:
+                is_access = True
+                
+            if "vlan" in line:
+                vlans = list(map(int,line.split()[-1].split(",")))
+            else: continue
+
+            if is_access:
+                access_intfs[intf] = vlans[0]
+            else:
+                trunk_intfs[intf] = vlans
+
+            intf, vlans, is_access = None, None, None
+
+    return (access_intfs, trunk_intfs)
+
+print(get_int_vlan_map("config_sw1.txt"))
