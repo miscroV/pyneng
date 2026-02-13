@@ -25,3 +25,25 @@ Please note that in this case, you can not check the correctness
 of the IP address, address ranges, and so on, since the command
 output from network device is processed, not user input.
 """
+import re
+
+#
+
+def get_ip_from_cfg(file_name: str) -> list[tuple]:
+    intf_reg = re.compile(
+        r'^interface (?P<intf>\S+)'    
+        r'(?P<block>'                  
+        r'(?:\n\s+.*)*'                
+        r')', 
+        re.MULTILINE
+    )
+
+    ip_reg = re.compile(
+        r'ip address (?P<ip>(?:\d{1,3}\.){3}\d{1,3}) (?P<netmask>(?:\d{1,3}\.){3}\d{1,3})'
+    )
+
+    with open(file_name) as file:
+        return { intf['intf'] : ip_reg.findall(intf['block']) for intf in intf_reg.finditer(file.read()) if ip_reg.findall(intf['block'])}
+
+if __name__ == '__main__':
+   print(get_ip_from_cfg('/workspaces/pyneng/exercises/15_module_re/config_r2.txt'))

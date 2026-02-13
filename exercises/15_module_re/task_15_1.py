@@ -22,3 +22,19 @@ of the IP address, address ranges, and so on, since the command
 output from network device is processed, not user input.
 
 """
+import re
+
+def get_ip_from_cfg(file_name: str) -> list[tuple]:
+    reg = re.compile(r'interface.*'
+                     r'?ip address (?P<ip>\b(?:\d{1,3}\.){3}\d{1,3}\b) '
+                     r'(?P<netmask>\b(?:\d{1,3}\.){3}\d{1,3}\b)'
+                     r'', 
+                     re.DOTALL | re.MULTILINE)
+    ip_list = []
+    with open(file_name) as file:
+        for match in reg.finditer(file.read()):
+          ip_list.append((match['ip'], match['netmask']))
+    return ip_list
+
+if __name__ == '__main__':
+    print(get_ip_from_cfg('/workspaces/pyneng/exercises/15_module_re/config_r1.txt'))
