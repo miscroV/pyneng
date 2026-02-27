@@ -26,3 +26,24 @@ of the interface:
 
 Check the operation of the function on the sh_cdp_n_sw1.txt file.
 """
+
+
+import re
+def generate_description_from_cdp(cdp_file: str) -> dict:
+    cdp_reg = re.compile(r'^(?P<device_id>\S+)\s+(?P<local_interface>\S+\s\S+)\s+(?P<hold_time>\d+)\s+(?P<capabilities>(\S ){0,3})\s+(?P<platform>\S+)\s+(?P<port_id>\S+\s\S+)'
+)
+    ignore = ["show", "Capability", "I - IGMP"]
+
+    descriptions = {}
+    with open(cdp_file) as file:
+        for row in file:
+            if any([i in row for i in ignore]): 
+                continue
+            cdp_row = cdp_reg.search(row)
+            if not cdp_row:
+                continue
+            descriptions.update({cdp_row['local_interface'] : f"description Connected to {cdp_row['device_id']} port {cdp_row['port_id']}"})
+    return descriptions
+
+temp = generate_description_from_cdp("/workspaces/pyneng/exercises/15_module_re/sh_cdp_n_sw1.txt")
+print(temp)

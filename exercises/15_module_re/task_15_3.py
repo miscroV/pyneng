@@ -32,3 +32,35 @@ In the file with the rules for the ASA:
 
 In all rules for ASA, the interfaces will be the same (inside, outside).
 """
+
+import re
+
+def convert_ios_nat_to_asa(ios_nat_rules_file: str, asa_nat_rules_file: str) -> None:
+    """
+    convert cisco ios nat rules from ios_nat_rules_file into asa style rules and write to asa_nat_rules_file.
+    
+    :param ios_nat_rules_file: file path for ios nat rules to convert
+    :type ios_nat_rules_file: str
+    :param asa_nat_rules_file: file path to write asa nat rules to. 
+    :type asa_nat_rules_file: str
+    """
+    asa_format = ["object network LOCAL_{}",
+                  " host {}",
+                  " nat (inside,outside) static interface service tcp {} {}"]
+    nat_reader: re.Pattern[str] = re.compile(r'(?:\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+)'
+                                             r'(?P<ip>\S+)\s+'
+                                             r'(?P<port>\d+)\s+'
+                                             r'(?:\S+\s+\S+\s+)'
+                                             r'(?P<externalPort>\d+)\s+'
+                                             )
+    with open(ios_nat_rules_file, 'r') as ios, open(asa_nat_rules_file, 'w') as asa:
+        #! a list of tuples in the form 'ip', 'internal port', 'external port'
+        nat_configs = nat_reader.findall(ios.read())
+        for ip, i_port, e_port in nat_configs:
+            print("\n".join(asa_format).format(ip, ip, i_port, e_port), file=asa)
+
+
+convert_ios_nat_to_asa(
+    "/workspaces/pyneng/exercises/15_module_re/cisco_nat_config.txt", 
+    "/workspaces/pyneng/exercises/15_module_re/cisco_asa_nat_config.test"
+    )

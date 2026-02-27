@@ -24,3 +24,30 @@ interface Loopback0
 
 Check the operation of the function using the example of the config_r1.txt file.
 """
+
+import re 
+
+def get_ints_without_description(config_file: str) -> list[str]:
+    """
+    return list of interfaces that do not have a description
+    
+    :param config_file: config file path.
+    :type config_file: str
+    :return: list of interfaces without descriptions.
+    :rtype: list[str]
+    """
+    intf_reg = re.compile(
+        r'^interface (?P<intf>\S+)'    
+        r'(?P<block>'                  
+        r'(?:\n\s+.*)*'                
+        r')', 
+        re.MULTILINE
+    )
+    desc_reg = re.compile(
+        r'description'
+    )
+    with open(config_file) as file:
+        return [desc[0] for desc in intf_reg.findall(file.read()) if not desc_reg.search(desc[1])]
+
+
+get_ints_without_description("/workspaces/pyneng/exercises/15_module_re/config_r1.txt")
