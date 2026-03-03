@@ -42,9 +42,33 @@ You can uncomment the print(sh_version_files) line to see the content of the lis
 In addition, a list of headers has been created, which should be written to CSV.
 """
 
-import glob
+import glob, re, csv, os
 
 sh_version_files = glob.glob("sh_vers*")
 # print(sh_version_files)
 
 headers = ["hostname", "ios", "image", "uptime"]
+
+_SH_VERSION_PATTERNS = [
+  re.compile(r'(?:Cisco IOS Software, .+ Version )(?P<ios>\S+),'), 
+  re.compile(r'(?:System image file is ")(?P<image>\S+)"'), 
+  re.compile(r'(?:.+ uptime is )(?P<uptime>.+)')
+]
+
+def parse_sh_version(sh_version_output: str) -> tuple[str, str, str]:
+    results = [p.search(sh_version_output).groupdict() for p in _SH_VERSION_PATTERNS]
+    return tuple([v for d in results for _, v in d.items()])
+
+def write_inventory_to_csv(data_filenames: list[str], csv_filename: str) -> None:
+    with open(csv_filename, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+
+        for filename in data_filenames:
+            with open(filename) as fh:
+                hostname = os.path.basename(filename).split('_')[2].split('.')[0]
+                writer.writerow([hostname, *parse_sh_version(fh.read())])
+
+if __name__ == "__main__":
+    root_dir = '/workspaces/pyneng/exercises/17_serialization/'
+    write_inventory_to_csv([root_dir + f for f in sh_version_files], root_dir + 'routers_inventory.csv')
