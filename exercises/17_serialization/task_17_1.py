@@ -30,3 +30,32 @@ the file name, the rest - from the contents in the files.
 Check the function on the contents of the files sw1_dhcp_snooping.txt,
 sw2_dhcp_snooping.txt, sw3_dhcp_snooping.txt.
 """
+import csv, re, os
+from typing import Generator
+
+def write_dhcp_snooping_to_csv(files: list[str], outFile: str) -> None:
+    pattern = re.compile(r'(?P<mac>(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})\s+(?P<ip>\d+.\d+.\d+.\d+)\s+(?:\d+)\s+(?:\S+)\s+(?P<vlan>\d+)\s+(?P<intf>\S+)')
+    headers = ['switch', 'mac', 'ip', 'vlan', 'interface']
+    device_name_splitter = '_'
+
+    def _iter_bindings(filename: str) -> Generator[list[str], None, None]:
+        switch_name = os.path.basename(filename).split(device_name_splitter)[0]
+        with open(filename, 'r') as fh:
+            for line in fh:
+                match = pattern.search(line)
+                if not match: continue
+                yield [switch_name] + list(match.groups())
+
+    with open(outFile, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+
+        for filename in files:
+            for row in _iter_bindings(filename):
+                writer.writerow(row)
+
+if __name__ == '__main__':
+    root_dir = '/workspaces/pyneng/exercises/17_serialization/'
+    files = [root_dir + f for f in ['sw1_dhcp_snooping.txt', 'sw2_dhcp_snooping.txt', 'sw3_dhcp_snooping.txt']]
+    outfile = root_dir + 'dhcp_snooping.csv'
+    write_dhcp_snooping_to_csv(files, outfile)
